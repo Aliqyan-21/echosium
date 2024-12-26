@@ -3,12 +3,11 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/aliqyan-21/echosium/jamendo"
+	"github.com/spf13/cobra"
 	"math/rand"
 	"os"
 	"os/exec"
-
-	"github.com/aliqyan-21/echosium/jamendo"
-	"github.com/spf13/cobra"
 )
 
 var mood string
@@ -48,12 +47,14 @@ var startCmd = &cobra.Command{
 		if len(tracks) == 0 {
 			fmt.Printf("No tracks found for mood : %s.", mood)
 		} else {
-			randIdx := rand.Intn(len(tracks))
-			track := tracks[randIdx]
+			for true {
+				randIdx := rand.Intn(len(tracks))
+				track := tracks[randIdx]
 
-			fmt.Printf("Now playing: %s by %s\n", track.Name, track.Artist)
+				fmt.Printf("Now playing: %s by %s\n", track.Name, track.Artist)
 
-			playMusic(track.TrackUrl)
+				playMusic(track.TrackUrl)
+			}
 		}
 	},
 }
@@ -75,6 +76,6 @@ func playMusic(trackUrl string) {
 }
 
 func init() {
-	startCmd.Flags().StringVarP(&mood, "mood", "m", "relaxation", "Specify the mood for the music tracks (e.g., peaceful, upbeat, relaxed)")
+	startCmd.Flags().StringVarP(&mood, "mood", "m", "relaxed", "Specify the mood for the music tracks (e.g., peaceful, upbeat, relaxed)")
 	rootCmd.AddCommand(startCmd)
 }

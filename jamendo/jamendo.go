@@ -21,6 +21,7 @@ type Track struct {
 	AudioDownload bool   `json:"audiodownload_allowed"`
 }
 
+// GetTracks gets the track with the help of jamendo api according to the user specified mood
 func GetTracks(clientID, mood string) ([]Track, error) {
 	url := fmt.Sprintf("https://api.jamendo.com/v3.0/tracks/?client_id=%s&fuzzytags=%s&format=jsonpretty", clientID, mood)
 
