@@ -1,6 +1,12 @@
 # Echosium 🎵
 
-> Your coding companion, weaving productivity with sound.
+<p align="center">
+  <img src="assets/logo.png" alt="Echosium Logo" width="250">
+</p>
+
+<p align="center">
+  <em>Your coding companion, weaving productivity with sound.</em>
+</p>
 
 Echosium is an intelligent CLI music player that automatically adapts to your coding rhythm based on two states of a developer ("active coding state" and "thinking/reflection state"").
 
