@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -89,7 +90,7 @@ var automodeCmd = &cobra.Command{
 		}
 
 		// tracks for idle state mood
-		fmt.Printf("Loading tracks for idle mode; Mood : %s\n", idleStateMood)
+		fmt.Printf("Loading tracks for idle mode...; Mood : %s\n", idleStateMood)
 		idleTracks, err = jamendo.GetTracks(clientID, idleStateMood)
 		if err != nil || len(idleTracks) == 0 {
 			fmt.Printf("Failed to fetch the tracks for mood %s: %v\n", idleStateMood, err)
@@ -97,7 +98,7 @@ var automodeCmd = &cobra.Command{
 		}
 
 		// tracks for coding state mood
-		fmt.Printf("Loading tracks for coding mode; Mood : %s\n", codingStateMood)
+		fmt.Printf("Loading tracks for coding mode...; Mood : %s\n", codingStateMood)
 		codingTracks, err = jamendo.GetTracks(clientID, codingStateMood)
 		if err != nil || len(codingTracks) == 0 {
 			fmt.Printf("Failed to fetch the tracks for mood %s: %v\n", codingStateMood, err)
@@ -174,7 +175,7 @@ func updateState(newState string) {
 	prevState := currState
 	currState = newState
 
-	fmt.Printf("\nState transition: %s -> %s at %s\n",
+	fmt.Printf("\nState: %s -> %s [%s]\n",
 		prevState, currState, time.Now().Format("15:04:05"))
 
 	if currState == "idle" {
@@ -191,14 +192,46 @@ func playTrack(tracks []jamendo.Track) {
 	idx := rand.Intn(len(tracks)) // random int (0, length of tracks)
 	track := tracks[idx]
 
-	fmt.Printf("Now playing: %s by %s\n", track.Name, track.Artist)
+	const boxWidth = 50
+	padding := func(content string) string {
+		if len(content) > boxWidth-15 {
+			return content[:boxWidth-18] + "..."
+		}
+		return content + strings.Repeat(" ", boxWidth-len(content)-15)
+	}
+
+	title := fmt.Sprintf("| Title    : %-*s |", boxWidth-15, padding(track.Name))
+	artist := fmt.Sprintf("| Artist   : %-*s |", boxWidth-15, padding(track.Artist))
+	album := fmt.Sprintf("| Album    : %-*s |", boxWidth-15, padding(track.Album))
+	state := fmt.Sprintf("| State    : %-*s |", boxWidth-15, padding(currState))
+	var mood string
+	if currState == "idle" {
+		mood = fmt.Sprintf("| Mood     : %-*s |", boxWidth-15, padding(idleStateMood))
+	} else if currState == "coding" {
+		mood = fmt.Sprintf("| Mood     : %-*s |", boxWidth-15, padding(codingStateMood))
+	}
+	info1 := fmt.Sprintf("| Info     : %-*s |", boxWidth-15, padding("Press Space to pause/play"))
+	info2 := fmt.Sprintf("|          : %-*s |", boxWidth-15, padding("Arrow Keys to forward/backward"))
+
+	fmt.Println(strings.Repeat("-", boxWidth))
+	fmt.Println("| Now Playing" + strings.Repeat(" ", boxWidth-14) + "|")
+	fmt.Println(strings.Repeat("-", boxWidth))
+	fmt.Println(title)
+	fmt.Println(artist)
+	fmt.Println(album)
+	fmt.Println(state)
+	fmt.Println(mood)
+	fmt.Println(strings.Repeat("-", boxWidth))
+	fmt.Println(info1)
+	fmt.Println(info2)
+	fmt.Println(strings.Repeat("-", boxWidth))
 
 	if currCmd != nil {
 		_ = currCmd.Process.Kill()
 		currCmd = nil
 	}
 
-	currCmd = exec.Command("mpv", "--no-audio-display", "--no-input-terminal", track.TrackUrl)
+	currCmd = exec.Command("mpv", "--no-audio-display", "--msg-level=all=no", track.TrackUrl)
 	currCmd.Stdout = os.Stdout
 	currCmd.Stderr = os.Stderr
 
