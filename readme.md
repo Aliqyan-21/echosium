@@ -26,7 +26,7 @@ Whether you're deep in focused coding or taking a moment to reflect, Echosium se
 
 ### Prerequisites
 
-- Go 1.x or higher
+- Go 1.22.9 or higher
 - MPV player installed on your system
 - Jamendo API client ID
 
