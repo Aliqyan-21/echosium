@@ -25,6 +25,14 @@ var (
 	currState       string
 )
 
+// initialization of some customizable constants in future
+const (
+	idleThreshold             = 15 // time without key presess to transition to idle state
+	checkInterval             = 1  // every this seconds we will check states
+	activeCodingWindow        = 5  // active window to consider keypresses in
+	minKeyPressForCodingState = 3  // min key pressed in activeCodingWindow to consider in coding state
+)
+
 // automodeCmd represents the autmode command
 var automodeCmd = &cobra.Command{
 	Use:   "automode",
@@ -82,26 +90,46 @@ var automodeCmd = &cobra.Command{
 	},
 }
 
+var keyPressCt int
+var keyPressTimer time.Timer
+
 // observeKeyPress is a goroutine that checks if any key is presed and updates lastKeyPress time
 func observeKeyPress(events chan hook.Event) {
 	for e := range events {
 		if e.Kind == hook.KeyDown {
-			fmt.Println("A key was pressed")
+			stateMutex.Lock()
+			// fmt.Println("A key was pressed")
 			lastKeyPress = time.Now()
+			keyPressCt++
+			stateMutex.Unlock()
+
+			if keyPressTimer.C != nil {
+				keyPressTimer.Stop()
+			}
+
+			keyPressTimer = *time.AfterFunc(activeCodingWindow*time.Second, func() {
+				stateMutex.Lock()
+				keyPressCt = 0
+				stateMutex.Unlock()
+			})
 		}
 	}
 }
 
 // changeState is the function that changes the states according to keypress or idle
 func changeStates() {
-	for {
-		time.Sleep(30 * time.Second)
+	ticker := time.NewTicker(checkInterval * time.Second)
+	defer ticker.Stop()
 
+	for range ticker.C {
+		stateMutex.Lock()
 		elapsed := time.Since(lastKeyPress)
+		currKeyPressCt := keyPressCt
+		stateMutex.Unlock()
 
-		if elapsed >= 20*time.Second && currState != "idle" {
+		if elapsed >= idleThreshold*time.Second && currState != "idle" {
 			updateState("idle")
-		} else if elapsed <= 1*time.Second && currState != "coding" { // time between key pressed should be less than a second
+		} else if elapsed < idleThreshold*time.Second && currKeyPressCt >= minKeyPressForCodingState && currState != "coding" { // time between key pressed should be less than a second
 			updateState("coding")
 		}
 	}
@@ -116,7 +144,11 @@ func updateState(newState string) {
 		return
 	}
 
+	prevState := currState
 	currState = newState
+
+	fmt.Printf("\nState transition: %s -> %s at %s\n",
+		prevState, currState, time.Now().Format("15:04:05"))
 
 	if currState == "idle" {
 		fmt.Printf("\nTransitioning to idle state; Mood : %s\n", idleStateMood)
@@ -155,6 +187,6 @@ func playTrack(tracks []jamendo.Track) {
 // init initializes the command in cobra and sets the flags
 func init() {
 	automodeCmd.Flags().StringVarP(&idleStateMood, "idle", "i", "relaxed", "Specify the mood for your idle state (e.g., peaceful, relaxed, chill)")
-	automodeCmd.Flags().StringVarP(&codingStateMood, "coding", "c", "focused", "Specify the mood for your coding state (e.g., focus, rock, energetic)")
+	automodeCmd.Flags().StringVarP(&codingStateMood, "coding", "c", "focus", "Specify the mood for your coding state (e.g., focus, rock, energetic)")
 	rootCmd.AddCommand(automodeCmd)
 }
