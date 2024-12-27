@@ -10,6 +10,7 @@ import (
 	"os/exec"
 )
 
+// initialization of mood of song variable
 var mood string
 
 // startCmd represents the start command
@@ -59,6 +60,7 @@ var startCmd = &cobra.Command{
 	},
 }
 
+// playMucis function plays the given track using mpv music player
 func playMusic(trackUrl string) {
 	_, err := exec.LookPath("mpv")
 	if err != nil {

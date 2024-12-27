@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// initialization of important variables for better readablility and workflow
 var (
 	idleStateMood   string
 	codingStateMood string
@@ -24,6 +25,7 @@ var (
 	currState       string
 )
 
+// automodeCmd represents the autmode command
 var automodeCmd = &cobra.Command{
 	Use:   "automode",
 	Short: "Changes music automatically according to two states of a developer - 'active coding' and 'thinking/reflecting'",
@@ -80,6 +82,7 @@ var automodeCmd = &cobra.Command{
 	},
 }
 
+// observeKeyPress is a goroutine that checks if any key is presed and updates lastKeyPress time
 func observeKeyPress(events chan hook.Event) {
 	for e := range events {
 		if e.Kind == hook.KeyDown {
@@ -89,9 +92,10 @@ func observeKeyPress(events chan hook.Event) {
 	}
 }
 
+// changeState is the function that changes the states according to keypress or idle
 func changeStates() {
 	for {
-		time.Sleep(5 * time.Second) // for giving time to jamendo
+		time.Sleep(30 * time.Second)
 
 		elapsed := time.Since(lastKeyPress)
 
@@ -103,6 +107,7 @@ func changeStates() {
 	}
 }
 
+// updateState function updates the currState and plays the tracks according to that states mood
 func updateState(newState string) {
 	stateMutex.Lock()
 	defer stateMutex.Unlock()
@@ -122,6 +127,7 @@ func updateState(newState string) {
 	}
 }
 
+// playTrack function plays the given track using mpv music player
 func playTrack(tracks []jamendo.Track) {
 	idx := rand.Intn(len(tracks)) // random int (0, length of tracks)
 	track := tracks[idx]
@@ -146,6 +152,7 @@ func playTrack(tracks []jamendo.Track) {
 	}()
 }
 
+// init initializes the command in cobra and sets the flags
 func init() {
 	automodeCmd.Flags().StringVarP(&idleStateMood, "idle", "i", "relaxed", "Specify the mood for your idle state (e.g., peaceful, relaxed, chill)")
 	automodeCmd.Flags().StringVarP(&codingStateMood, "coding", "c", "focused", "Specify the mood for your coding state (e.g., focus, rock, energetic)")
