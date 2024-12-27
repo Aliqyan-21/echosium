@@ -3,13 +3,12 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/aliqyan-21/echosium/jamendo"
+	"github.com/spf13/cobra"
 	"math/rand"
 	"os"
 	"os/exec"
 	"strings"
-
-	"github.com/aliqyan-21/echosium/jamendo"
-	"github.com/spf13/cobra"
 )
 
 // initialization of mood of song variable
