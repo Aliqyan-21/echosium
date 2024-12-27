@@ -3,11 +3,12 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/aliqyan-21/echosium/jamendo"
-	"github.com/spf13/cobra"
 	"math/rand"
 	"os"
 	"os/exec"
+
+	"github.com/aliqyan-21/echosium/jamendo"
+	"github.com/spf13/cobra"
 )
 
 // initialization of mood of song variable
@@ -19,9 +20,15 @@ var startCmd = &cobra.Command{
 	Short: "plays the music based on the mood, default mood is focus",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		confFile, err := os.Open("config.json")
+		home, err := os.UserHomeDir()
 		if err != nil {
-			fmt.Printf("Failed to open config file: %v\n", err)
+			fmt.Printf("Failed to get the home directory: %v\n", err)
+			return
+		}
+
+		confFile, err := os.Open(home + "/.config/echosium/config.json")
+		if err != nil {
+			fmt.Printf("Failed to find config file:\n %v\n", err)
 			return
 		}
 		defer confFile.Close()
@@ -78,6 +85,6 @@ func playMusic(trackUrl string) {
 }
 
 func init() {
-	startCmd.Flags().StringVarP(&mood, "mood", "m", "relaxed", "Specify the mood for the music tracks (e.g., peaceful, upbeat, relaxed)")
+	startCmd.Flags().StringVarP(&mood, "mood", "m", "focus", "Specify the mood for the music tracks (e.g., peaceful, upbeat, relaxed)")
 	rootCmd.AddCommand(startCmd)
 }

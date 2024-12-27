@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -26,11 +27,12 @@ var (
 )
 
 // initialization of some customizable constants in future
-const (
-	idleThreshold             = 15 // time without key presess to transition to idle state
-	checkInterval             = 1  // every this seconds we will check states
-	activeCodingWindow        = 5  // active window to consider keypresses in
-	minKeyPressForCodingState = 3  // min key pressed in activeCodingWindow to consider in coding state
+const checkInterval = 1 // every this seconds we will check states
+
+var (
+	idleThreshold             time.Duration = 15 // time without key presess to transition to idle state
+	activeCodingWindow        time.Duration = 5  // active window to consider keypresses in
+	minKeyPressForCodingState int           = 3  // min key pressed in activeCodingWindow to consider in coding state
 )
 
 // automodeCmd represents the autmode command
@@ -38,7 +40,13 @@ var automodeCmd = &cobra.Command{
 	Use:   "automode",
 	Short: "Changes music automatically according to two states of a developer - 'active coding' and 'thinking/reflecting'",
 	Run: func(cmd *cobra.Command, args []string) {
-		confFile, err := os.Open("config.json")
+		home, err := os.UserHomeDir()
+		if err != nil {
+			fmt.Printf("Failed to get the home directory: %v\n", err)
+			return
+		}
+
+		confFile, err := os.Open(home + "/.config/echosium/config.json")
 		if err != nil {
 			fmt.Printf("Failed to open config file: %v\n", err)
 			return
@@ -59,6 +67,25 @@ var automodeCmd = &cobra.Command{
 		} else if clientID == "" {
 			fmt.Printf("client_id field is empty\n")
 			return
+		}
+
+		// configuration loading
+		tmp, exists := config["idle_time"]
+		if exists && tmp != "" {
+			conf, _ := strconv.Atoi(config["idle_time"])
+			idleThreshold = time.Duration(conf)
+		}
+
+		tmp, exists = config["keypress_window"]
+		if exists && tmp != "" {
+			conf, _ := strconv.Atoi(config["keypress_window"])
+			activeCodingWindow = time.Duration(conf)
+		}
+
+		tmp, exists = config["min_key_presses"]
+		if exists && tmp != "" {
+			conf, _ := strconv.Atoi(config["min_key_presses"])
+			minKeyPressForCodingState = conf
 		}
 
 		// tracks for idle state mood
