@@ -239,7 +239,11 @@ func playTrack(tracks []jamendo.Track) {
 		err := currCmd.Run()
 
 		if err != nil {
+			if exitError, ok := err.(*exec.ExitError); ok && exitError.ExitCode() == -1 {
+				return
+			}
 			fmt.Printf("Error occured while starting mpv: %v\n", err)
+			return
 		}
 	}()
 }
