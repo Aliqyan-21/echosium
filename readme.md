@@ -35,7 +35,7 @@ Echosium is an intelligent CLI music player that syncs with your natural develop
 
 ## Demo
 
-https://github.com/user-attachments/assets/52ac6986-668b-4465-9c66-338005dffed5
+https://github.com/user-attachments/assets/42dca66f-55ab-4d15-88b3-830b7b30c64b
 
 ## Contents
 
@@ -203,7 +203,11 @@ Echosium uses sophisticated state detection to determine your current activity:
 - Implements goroutines for efficient state management
 - Uses mutex locks for thread-safe operations
 
-> System Architecture and Flow Diagrams : [Diagrams](technical_diagrams.md)
+> System Architecture and Flow Diagrams
+
+| **Echosium System Architecture**                                | **Echosium State Transitioning Flow**                            |
+| --------------------------------------------------------------- | ---------------------------------------------------------------- |
+| ![Echosium System Architecture](assets/system_architecture.png) | ![Echosium State Transitioning Flow](assets/transition_flow.png) |
 
 ## 🤝 Contributing
 
