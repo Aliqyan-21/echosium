@@ -1,4 +1,4 @@
-# Echosium 🎵
+# Echosium
 
 <p align="center">
   <img src="assets/logo.png" alt="Echosium Logo" width="250">
@@ -8,21 +8,71 @@
   <em>Your coding companion, weaving productivity with sound.</em>
 </p>
 
-Echosium is an intelligent CLI music player that automatically adapts to your coding rhythm based on two states of a developer ("active coding state" and "thinking/reflection state"").
+<p align="center">
+  <a href="https://github.com/aliqyan-21/echosium/stargazers">
+    <img src="https://img.shields.io/github/stars/aliqyan-21/echosium?style=flat-square&color=yellow" alt="Stars">
+  </a>
+  <a href="https://github.com/aliqyan-21/echosium/network/members">
+    <img src="https://img.shields.io/github/forks/aliqyan-21/echosium?style=flat-square&color=orange" alt="Forks">
+  </a>
+  <a href="https://github.com/aliqyan-21/echosium/issues">
+    <img src="https://img.shields.io/github/issues/aliqyan-21/echosium?style=flat-square&color=red" alt="Issues">
+  </a>
+  <a href="https://github.com/aliqyan-21/echosium/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/aliqyan-21/echosium?style=flat-square&color=blue" alt="License">
+  </a>
+  <br>
+  <img src="https://img.shields.io/badge/Go-1.22.9-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go Version">
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform Support">
+  <a href="https://goreportcard.com/report/github.com/aliqyan-21/echosium">
+    <img src="https://goreportcard.com/badge/github.com/aliqyan-21/echosium?style=flat-square" alt="Go Report Card">
+  </a>
+  <br>
+  <a href="https://en.wikipedia.org/wiki/Clean_architecture">
+    <img src="https://img.shields.io/badge/Clean%20Architecture-1.0.0-green?style=flat-square" alt="Clean Architecture">
+  </a>
+  <img src="https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg?style=flat-square" alt="Maintenance">
+</p>
 
-Whether you're deep in focused coding or taking a moment to reflect, Echosium sets the perfect soundtrack for your development journey.
+Echosium is an intelligent CLI music player that syncs with your natural development rhythm. By detecting your coding patterns, it automatically transitions between energizing tracks during active development and calming melodies during reflection phases, creating the perfect acoustic environment for your workflow.
 
-## ✨ Features
+## Demo
 
-- 🎯 **Smart State Detection**: Automatically detects whether you're actively coding or in a thinking/reflection state.
-- 🎵 **Adaptive Music Selection**: Switches music based on your current state:
+https://github.com/user-attachments/assets/52ac6986-668b-4465-9c66-338005dffed5
+
+## Contents
+
+- [Quick Start](#-quick-start)
+- [Features](#-features)
+- [Getting Started](#-getting-started)
+- [Usage](#-usage)
+- [How It Works](#how-it-works)
+- [Technical Details](#technical-details)
+- [Contributing](#-contributing)
+- [License](#license)
+- [Acknowledgments](#-acknowledgments)
+
+## Features
+
+- **Intelligent State Detection**: Automatically identifies your programming state.
+
+  - Active coding: When you're in the flow of writing code
+  - Reflection: During code review and problem-solving moments
+
+- **Dynamic Music Adaptation**: Switches music based on your current state:
+
   - Coding state: Energetic, focus-enhancing tracks
-  - Idle state: Relaxing, ambient tunes
-- 🎼 **Mood-Based Playlists**: Access to vast library of tracks through Jamendo API
-- 🔧 **Customizable**: Set your preferred music moods for both coding and idle states
-- 💻 **Developer-Friendly**: Simple CLI interface with intuitive commands
+  - Idle state: Relaxing, ambient tracks
 
-## 🚀 Getting Started
+- **Rich Music Library**: Access to vast library of tracks through Jamendo API
+
+- **Zero-Config Setup**: Works right out of the box with smart defaults
+
+- **Full Customization**: Personalize your preferences through config file, moods from terminal params
+
+- **Developer-Centric CLI**: Clean, intuitive command-line interface
+
+## Getting Started
 
 ### Prerequisites
 
@@ -58,7 +108,14 @@ cd echosium
 go mod download
 ```
 
-4. Create a config.json file in the root directory:
+4. Install app:
+
+```bash
+go build
+go install
+```
+
+5. Create a config.json file in the root directory:
 
 - For Linux
 
@@ -82,12 +139,6 @@ go mod download
 > **keypress_window** = time in seconds to check for min_key_presses in that time window
 
 > **min_key_presses** = min key presses in keypress_window time to change to coding state (idle -> coding)
-
-5. Build the project:
-
-```bash
-go build
-```
 
 ## 🎮 Usage
 
@@ -124,7 +175,7 @@ Options:
 
 - `-m, --mood`: Specify the mood for tracks (default: "relaxed")
 
-## 🎵 Example Moods
+## Example Moods
 
 You can use various moods like:
 
@@ -139,7 +190,7 @@ You can use various moods like:
 
 > More Examples - [usage](usage_examples.md)
 
-## ⚙️ How It Works
+## How It Works
 
 Echosium uses sophisticated state detection to determine your current activity:
 
@@ -147,7 +198,7 @@ Echosium uses sophisticated state detection to determine your current activity:
 - **Idle State**: Activated after 15 seconds of keyboard inactivity (customizable)
 - **Music Transition**: Smooth transitions between states with appropriate mood-based tracks (customizable)
 
-## 🔍 Technical Details
+## Technical Details
 
 - Built with Go
 - Uses Jamendo API for music streaming
@@ -161,10 +212,11 @@ Echosium uses sophisticated state detection to determine your current activity:
 Contributions are welcome! Feel free to:
 
 - Report bugs
-- Suggest features
-- Submit pull requests
+- Discussing the current state of the code
+- Submitting a fix
+- Proposing new features
 
-## 📝 License
+## License
 
 This project is licensed under the Apache-2.0 License
 
