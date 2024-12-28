@@ -202,7 +202,8 @@ Echosium uses sophisticated state detection to determine your current activity:
 - MPV player for music playback
 - Implements goroutines for efficient state management
 - Uses mutex locks for thread-safe operations
-- [Diagrams](technical_diagrams.md)
+
+> System Architecture and Flow Diagrams : [Diagrams](technical_diagrams.md)
 
 ## 🤝 Contributing
 
