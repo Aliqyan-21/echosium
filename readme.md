@@ -28,9 +28,6 @@
     <img src="https://goreportcard.com/badge/github.com/aliqyan-21/echosium?style=flat-square" alt="Go Report Card">
   </a>
   <br>
-  <a href="https://en.wikipedia.org/wiki/Clean_architecture">
-    <img src="https://img.shields.io/badge/Clean%20Architecture-1.0.0-green?style=flat-square" alt="Clean Architecture">
-  </a>
   <img src="https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg?style=flat-square" alt="Maintenance">
 </p>
 
